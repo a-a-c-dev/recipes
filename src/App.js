@@ -41,7 +41,7 @@ const App = () => {
   
   useEffect(() => {
     if (!recipes.length>0) setError("Still loading, please wait")
-  }, [])
+  }, [isLoading])
   useEffect(() => {
     if (hasError) setError("Something happend, please reload the page and check you Internet connection")
   }, [hasError])
@@ -50,8 +50,8 @@ const App = () => {
     setIsLoading(true);
   }, [query])
   useEffect(() => {
-    if( !recipes.length>0 && !isLoading)setError("Couldn`t find the recipes, please serach again")
-    if (recipes.length>0)setIsLoading(false);
+    if(!recipes.length>0 && !isLoading)setError("Couldn`t find the recipes, please serach again");
+    if(recipes.length>0)setIsLoading(false);
   }, [recipes])
   return (
     <div className="app">

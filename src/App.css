@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+body{
+    font-size: 10px;
+}
+
 @font-face {
     font-family: primaryFont;
     src: url(./font/JosefinSlab-VariableFont_wght.ttf);
@@ -16,6 +20,7 @@
     position: relative;
     overflow: hidden;
     padding: 1vh 4vw 2vh;
+    background-color: rgb(66 66 66 / 40%);
 }
 .video-bg{ 
     height: 100vh;
@@ -45,12 +50,13 @@
     text-align: center;
 }
 .app-header-container h1{
-    font-size: 5rem;
-    line-height: 5rem;
-    letter-spacing: 1.25rem;
+    font-size: 3.5rem;
+    line-height: 3.8rem;
+    letter-spacing: .75rem;
     font-weight: 700;
     background-color: rgba(0,0,0,.02);
     text-transform: uppercase;
+    padding: .5em 0 ;
 }
 .app-header-container h3{
     font-weight: 600;
@@ -106,6 +112,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    text-align: center;
     width: 100%;
     max-width: 300px;
     text-transform: capitalize;
@@ -134,8 +141,8 @@
         padding:2em 1em  
       }
     .app-header-container h1{
-        font-size: 3rem;
-        line-height: 3.6rem;
+        font-size: 2.5rem;
+        line-height: 2.2rem;
     }
     
     .app-header-container h3{

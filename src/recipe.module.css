@@ -16,7 +16,11 @@ ul{
     list-style:none;
     padding: 0 0 35px;
     margin: 0;
-
+}
+ul li{
+    font-size: .85rem;
+    padding: 0 0 0.5em;
+    position: relative;
 }
 li, h5, p{
     font-family: "primaryFont";
