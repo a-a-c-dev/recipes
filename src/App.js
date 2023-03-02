@@ -6,16 +6,16 @@ import Search from './components/Search';
 import {Spinner} from './components/Spinner';
 import './App.css';
 import LocalStorageManager from "./utils/LocalStorageManager";
+import useLocalStorage from './hooks/useLocalStorage';
+
 
 const Recipes = lazy(() => import ('./components/Recipes'));
 
 const App = () => {
   const APP_ID = process.env.REACT_APP_RECIPES_API_ID;
   const APP_KEY = process.env.REACT_APP_RECIPES_API_KEY;
-  const storageQuery = LocalStorageManager.get('searchQuery');
-  const storageRecipes = (!LocalStorageManager.get('recipes')?[]:LocalStorageManager.get('recipes'));
-  const [recipes, setRecipes] = useState(storageRecipes);
-  const [query, setQuery] = useState(storageQuery);
+  const [recipes, setRecipes] = useLocalStorage('recipes',!LocalStorageManager.get('recipes')?[]:LocalStorageManager.get('recipes'));
+  const [query, setQuery] = useLocalStorage('searchQuery', LocalStorageManager.get('searchQuery')|| 'pasta');
   const [isLoading,setIsLoading] = useState(true);
   const[err,setError] =useState('');
   const[hasError,setHasError] =useState(false);
@@ -29,14 +29,16 @@ const App = () => {
     setQuery(searching);
   }
 
-  const getRecipes = useMemo(()=>
-    async () => {
+  const getRecipes = useMemo(()=>async () => {
+    setIsLoading(true);
     try{  
       const response = await fetch(url);
       const data = await response.json();
-      if(!data.hits.length>0)setError("couldnt found the recipe, please search for another")
-      setRecipes(data.hits);
-      LocalStorageManager.set("recipes",data.hits)
+      if(data.hits.length>0){
+        setRecipes(data.hits);      
+        setIsLoading(false);
+      }
+      else setError("couldnt found the recipe, please search for another")
     }
     catch(error){
       setHasError(true);
@@ -46,36 +48,32 @@ const App = () => {
   useEffect(() => {
     if (!recipes.length>0) setError("Still loading, please wait")
     if (hasError) setError("Something happend, please reload the page and check you Internet connection")
+    if(recipes.length>0)setIsLoading(false);
+    return () => { 
+      setError("")
+      setIsLoading(false)
+    }
   }, [recipes.length,isLoading, hasError]);
   
   
   useEffect(() => {
-    getRecipes();
-    setIsLoading(true);
-  }, [query,getRecipes]);
-  
-  
-  useEffect(() => {
-    if(!recipes.length>0 && !isLoading)setError("Couldn`t find the recipes, please serach again");
-    if(recipes.length>0)setIsLoading(false);
-  }, [ recipes, isLoading]);
-
-
+    let isMounted = true;
+    if(isMounted)getRecipes(); 
+    return () => { isMounted = false}
+  }, [,query,getRecipes]);
 
   return (
-    <div className="app">
+    <div className="app" >
       <BgVideo/>
       <div className="app-container">
         <Header/>
         <Search addRecipes={addRecipes}/>
-        <Suspense fallback={<Spinner/>}>
-        <Recipes  recipes={recipes} />
-        </Suspense>
+        {recipes && <Suspense fallback={<Spinner/>}>
+            <Recipes  recipes={recipes} />
+          </Suspense>
+        }
+        {err.length?<Error err={err}/>:null}
       </div> 
-      {isLoading? 
-        <Error err={err}/>
-        :null
-      }
     </div>
   );
 }

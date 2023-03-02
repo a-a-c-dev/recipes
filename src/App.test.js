@@ -1,66 +1,55 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import {rest} from 'msw';
+import {setupServer} from 'msw/node';
+import {render, screen, fireEvent, waitFor, act, getByRole,waitForElementToBeRemoved} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import 'mutationobserver-shim';
 import App from './App';
 
-describe('Testing app component', () => {
-    let wrapper;
-    let OnChangeSearching = jest.fn();
-    beforeEach(() => {
-        wrapper = shallow(<App onChange={OnChangeSearching} />);
-    });
+// Mock the Recipes component
 
 
-    it('Should render correctly ', () => {
-        expect(wrapper).toMatchSnapshot();
-    });
+const server = setupServer(
+  rest.get(' https://api.edamam.com/search', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        hits: [
+                {recipe: {label: 'Pasta recipe 1', calories: 100}},
+                {recipe: {label: 'Pasta recipe 2', calories: 200}},
+                {recipe: {label: 'Pasta recipe 3', calories: 300}},
+        ],
+      })
+    );
+  })
+);
 
-    xit('simulate change handler', () => {
-        //wrapper.find('input').instance().onChange({ target: { value } });
-        wrapper.find('input').simulate('change', { target: { value: 'test' } });
-        // expect(OnChangeSearching).toBeCalledWith('test');
-        //expect(mockFn.mock.calls[0][0]).toBe('test');
-
-    });
-    afterEach(() => {
-        wrapper.unmount();
-    });
-
-});
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 
-describe('', () => {
-    let wrapper;
-    let OnChangeSearching = jest.fn();
-    const props = {
-        onChange: OnChangeSearching
-    }
-    beforeEach(() => {
-        wrapper = shallow(<App {...props} />);
-    });
+test('renders a list of recipes', async () => {
+    // Create a mock function for the Recipes component
 
-    it('Should test change handler', () => {
-        let value = '';
-        const mockCallback = OnChangeSearching.mock.calls.length;
-        expect(mockCallback).toBe(0);
-        expect(wrapper.find('input').at(0).prop('value')).toEqual('');
-        wrapper.find('input').props().onChange({ target: { value: 'test' } });
-        wrapper.find('input').simulate('change', { target: { value: 'test' } });
-        wrapper.find('input').at(0).props().onChange({ e.target:{ e.value: 'test'}}})
-    .onChange({ City: { target: { value: 'test' } } })
-//expect(mockCallback).toBe(1);
-expect(wrapper.find('input').at(0).prop('value')).toEqual('');
-
-expect(wrapper.find('input').at(0).prop('value')).toEqual('test');
-        //expect(wrapper.find({ prop: 'value' })).to.have.lengthOf(1)
-
-        //expect(OnChangeSearching).toHaveBeenCalled();
-        //expect(OnChangeSearching).toHaveBeenCalledWith("test");
+    // Arrange
+    render(<App />);
+  //  act(() => jest.advanceTimersByTime(5000));
+  waitForElementToBeRemoved(()=>screen.getByText(/Still loading, please wait/i)).then(()=>{
 
 
 
-    })
 
-afterEach(() => {
-    wrapper.unmount();
-});
-})
+        // Act
+
+    screen.debug();     
+    const recipes = screen.getByRole('recipes');
+    expect(recipes).toBeInTheDocument();
+    expect(recipes).toHaveLength(3);
+    expect(recipes).toHaveTextContent('Pasta recipe 1');
+
+  });
+
+
+  });
+  

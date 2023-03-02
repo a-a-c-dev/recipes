@@ -1,28 +1,22 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import Recipe from './Recipe';
-import style from '../recipe.module.css';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect'; 
 
-describe('MyComponent', () => {
-    let wrapper;
-    beforeEach(() => {
-        wrapper = shallow(<Recipe />);
-    });
+import Recipe  from './Recipe';
 
-    afterEach(() => {
-        wrapper.unmount();
-    });
-    it('Should render correctly ', () => {
-        expect(wrapper).toMatchSnapshot();
-    });
-    it('Check the elements on the page', () => {
-        expect(wrapper.find('div').length).toBe(1);
-        expect(wrapper.find('div').hasClass(style.recipe)).toEqual(true);
-        expect(wrapper.find('h5').length).toBe(1);
-        expect(wrapper.find('p').length).toBe(1);
-        expect(wrapper.find('ol').length).toBe(1);
-        expect(wrapper.find('li').length).toBe(0);
-        expect(wrapper.find('img').length).toBe(1);
-        expect(wrapper.find('img').hasClass(style.image)).toEqual(true);
-    })
+describe('Recipe component', () => {
+  test('should render the props that been pass', () => {
+    const ingredients = [{text:'2 cups leftover pasta'}];
+    render(<Recipe url='/pasta' title="pasta" calories='1423' ingredients={ingredients} />);
+    const titleElement = screen.getByRole('title');
+    const ingredientsElements = screen.getAllByRole('ingredients');
+    const anchorElements = screen.getByText(/See More/i);
+    const caloriesElement = screen.getByRole('calories');
+    expect(titleElement).toBeInTheDocument();
+    expect(titleElement).toHaveTextContent('pasta');
+    expect(anchorElements).toHaveAttribute('href','/pasta')
+    expect(caloriesElement).toBeInTheDocument();
+    expect(caloriesElement).toHaveTextContent('1423');
+    expect(ingredientsElements[0]).toHaveTextContent(ingredients[0].text);
+  });
 });

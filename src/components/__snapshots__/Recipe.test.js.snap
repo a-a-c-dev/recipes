@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`MyComponent Should render correctly  1`] = `ShallowWrapper {}`;
-
-exports[`MyComponent Should render correctly in "debug" mode 1`] = `undefined`;
-
-exports[`MyComponent should render correctly in "debug" mode 1`] = `ShallowWrapper {}`;

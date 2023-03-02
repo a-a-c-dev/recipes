@@ -25,19 +25,16 @@ const Search = ({addRecipes}) => {
     }
   };
 
-
-
   const OnChangeSearching = value => {
     setSearching(value);
     InputIsValid()
   }
 
-
   const optimizedhandle = useCallback(debounce(OnChangeSearching),[]);
   
     return (
-        <form className="search-form" onSubmit={(event)=>addRecipes(event,searching,isValid)}  >
-        <input className="search-bar" type="text" onChange={event=>optimizedhandle(event.target.value)} />
+      <form role="searchForm" className="search-form" onSubmit={(event)=>addRecipes(event,searching,isValid)}  >
+        <input className="search-bar" type="text" placeholder='Type to search' onChange={event=>optimizedhandle(event.target.value)} />
         <button className="search-button" type="submit"  disabled={!isValid} >Search</button>
         <div className="validation-error">{err.query}</div>
       </form>

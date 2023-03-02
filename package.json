@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/user-event": "^14.4.3",
+    "msw": "^1.1.0",
+    "mutationobserver-shim": "^0.3.7",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-lazy-load": "^3.1.13",
@@ -31,8 +35,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.6.2",
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.14.0",
-    "enzyme-to-json": "^3.4.0"
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^12.1.5"
   }
 }
