@@ -1,15 +1,15 @@
 const prefix = 'recipes_app_';
-const isObject = (v) => typeof v === 'object' && !Array.isArray(v) && v !== null;
-module.exports = {
-    set: (key,value) => {
+const isObject = (v:any) => typeof v === 'object' && !Array.isArray(v) && v !== null;
+const LocalStorageManager = {
+    set: (key:string,value:any) => {
         if (typeof window !== "undefined") {
             return window.localStorage.setItem(`${prefix}${key}`, JSON.stringify(value));
         }
 
     },
-    get: (key) => {
+    get: (key:string) => {
         if (typeof window !== "undefined") {
-            let value =  window.localStorage.getItem(`${prefix}${key}`);
+            let value:any =  window.localStorage.getItem(`${prefix}${key}`);
 
             try {
                 return JSON.parse(value);
@@ -19,3 +19,5 @@ module.exports = {
         }
     }
 }
+
+export default LocalStorageManager;

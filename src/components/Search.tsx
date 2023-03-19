@@ -1,31 +1,37 @@
 import React,{useState,useCallback} from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
+interface SearchProp{
+  addRecipes: (event : React.FormEvent<HTMLFormElement> , searching: string, isValid: boolean) => void
+}
+interface Erros {
+  query?:string
+}
 
-const Search = ({addRecipes}) => {
+const Search = ({addRecipes}:SearchProp) => {
   
-  const [err, setErr] = useState({});
-  const [isValid, setIsValid] = useState(false);
-  const [searching, setSearching] = useLocalStorage("searchQuery", 'pasta');
+  const [err, setErr] = useState<Erros>({});
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [searching, setSearching] = useLocalStorage<any>("searchQuery", 'pasta' as string );
   
   const InputIsValid = useCallback(() => {
-    const errors = {};
+    const errors:Erros = {};
     const textPa = /^[a-zA-Z -]+$/;
     if (!searching.match(textPa)) errors.query = "*Query is not Valid";
-    if (!searching.length>0)errors.query = "*Query is required";
+    if (!(searching.length>0))errors.query = "*Query is required";
     setErr(errors);
     setIsValid(Object.keys(errors).length === 0);
   },[searching]);
   
-  const debounce = fn => {
-    let timerId;
-    return (...args) => {
+  const debounce = (fn:Function) => {
+    let timerId:ReturnType<typeof setTimeout>;
+    return (...args:any) => {
       clearTimeout(timerId);
       timerId = setTimeout(() => fn(...args), 200);
     }
   };
 
-  const OnChangeSearching = value => {
+  const OnChangeSearching = (value:string) => {
     setSearching(value);
     InputIsValid()
   }

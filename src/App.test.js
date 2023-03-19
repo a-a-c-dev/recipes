@@ -34,14 +34,8 @@ test('renders a list of recipes', async () => {
 
     // Arrange
     render(<App />);
-  //  act(() => jest.advanceTimersByTime(5000));
   waitForElementToBeRemoved(()=>screen.getByText(/Still loading, please wait/i)).then(()=>{
-
-
-
-
         // Act
-
     screen.debug();     
     const recipes = screen.getByRole('recipes');
     expect(recipes).toBeInTheDocument();

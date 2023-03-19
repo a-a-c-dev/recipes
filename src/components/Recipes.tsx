@@ -1,8 +1,31 @@
 import React from 'react';
 import Recipe from './Recipe';
 
+interface RecipesProps {
+  recipe:RecipeProps
+}
 
-const Recipes =React.memo( ({recipes}) => {
+
+interface RecipeProps {
+  uri:string
+  label:string
+  calories:string
+  image:string
+  ingredients:Ingredient[]
+  url:string
+}
+
+interface Ingredient{
+  text :string
+  quantity: number,
+  measure:string,
+  food:string,
+  weight:number
+
+
+}
+
+const Recipes =React.memo( ({recipes}:{recipes: RecipesProps[]}) => {
     return (
         <div role='recipes' className="recipes">  
           { recipes.map(recipe => (

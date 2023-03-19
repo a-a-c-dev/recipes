@@ -1,7 +1,7 @@
 import React from 'react';
 import ErrorIcon from '../assets/error-icon.svg'
 
-export const Error =React.memo(({err}) => {
+export const Error =React.memo(({err}:{err:string}) => {
     return (
         <div className="error">
             <div className="icon-container"><img src={ErrorIcon} alt="error"/></div>

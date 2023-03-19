@@ -1,3 +1,8 @@
+@font-face {
+    font-family: primaryFont;
+    src: url(./font/JosefinSlab-VariableFont_wght.ttf);
+  }
+
 .recipe{
     border-radius: 10px;
     box-shadow: 0px 5px 20px rgba(71,71,71);

@@ -8,9 +8,19 @@ import './App.css';
 import LocalStorageManager from "./utils/LocalStorageManager";
 import useLocalStorage from './hooks/useLocalStorage';
 
-
 const Recipes = lazy(() => import ('./components/Recipes'));
-
+interface RecipeData {
+  hits: {
+    recipe: {
+      calories: number;
+      label: string;
+      image: string;
+      url: string;
+      ingredients: string[];
+      uri: string;
+    };
+  }[];
+}
 const App = () => {
   const APP_ID = process.env.REACT_APP_RECIPES_API_ID;
   const APP_KEY = process.env.REACT_APP_RECIPES_API_KEY;
@@ -23,7 +33,7 @@ const App = () => {
 
  
 
-  const addRecipes = (e,searching,isValid) => {
+  const addRecipes = (e:React.FormEvent<HTMLFormElement>,searching:string,isValid:boolean) => {
     e.preventDefault();
     if(!isValid)return
     setQuery(searching);
@@ -33,9 +43,20 @@ const App = () => {
     setIsLoading(true);
     try{  
       const response = await fetch(url);
-      const data = await response.json();
+      const data:RecipeData = await response.json();
       if(data.hits.length>0){
-        setRecipes(data.hits);      
+     //   let newRecipes: { recipe: { calories: number, label: string, image: string, url: string, ingredients: string[], uri: string } }[] = data.hits.map(({ recipe: { calories, label, image, url, ingredients, uri } }) => ({ recipe: { calories, label, image, url, ingredients, uri } }));
+     const newRecipes = data.hits.map(({ recipe}) => ({
+          recipe: {
+            calories: recipe.calories,
+            label: recipe.label,
+            image: recipe.image,
+            url: recipe.url,
+            ingredients: recipe.ingredients,
+            uri: recipe.uri,
+          },
+        }));
+        setRecipes(newRecipes);       
         setIsLoading(false);
       }
       else setError("couldnt found the recipe, please search for another")
@@ -43,11 +64,11 @@ const App = () => {
     catch(error){
       setHasError(true);
     }
-},[url]);
+},[url,setRecipes]);
   
   useEffect(() => {
-    if (!recipes.length>0) setError("Still loading, please wait")
-    if (hasError) setError("Something happend, please reload the page and check you Internet connection")
+    if (!(recipes.length>0)) setError("Still loading, please wait")
+    if (hasError) setError("Something happend, please reload the page and check you Internet connection" )
     if(recipes.length>0)setIsLoading(false);
     return () => { 
       setError("")
@@ -60,7 +81,7 @@ const App = () => {
     let isMounted = true;
     if(isMounted)getRecipes(); 
     return () => { isMounted = false}
-  }, [,query,getRecipes]);
+  }, [query,getRecipes]);
 
   return (
     <div className="app" >
