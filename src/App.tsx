@@ -10,7 +10,7 @@ import useLocalStorage from './hooks/useLocalStorage';
 
 const Recipes = lazy(() => import ('./components/Recipes'));
 interface RecipeData {
-  hits: {
+  data:{hits: {
     recipe: {
       calories: number;
       label: string;
@@ -19,17 +19,16 @@ interface RecipeData {
       ingredients: string[];
       uri: string;
     };
-  }[];
+  }[];} 
+  
 }
 const App = () => {
-  const APP_ID = process.env.REACT_APP_RECIPES_API_ID;
-  const APP_KEY = process.env.REACT_APP_RECIPES_API_KEY;
   const [recipes, setRecipes] = useLocalStorage('recipes',!LocalStorageManager.get('recipes')?[]:LocalStorageManager.get('recipes'));
   const [query, setQuery] = useLocalStorage('searchQuery', LocalStorageManager.get('searchQuery')|| 'pasta');
   const [isLoading,setIsLoading] = useState(true);
   const[err,setError] =useState('');
   const[hasError,setHasError] =useState(false);
-  let url = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
+//  let url = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
 
  
 
@@ -42,11 +41,10 @@ const App = () => {
   const getRecipes = useMemo(()=>async () => {
     setIsLoading(true);
     try{  
-      const response = await fetch(url);
+      const response = await fetch(`/getRecipes?=${query}`);
       const data:RecipeData = await response.json();
-      if(data.hits.length>0){
-     //   let newRecipes: { recipe: { calories: number, label: string, image: string, url: string, ingredients: string[], uri: string } }[] = data.hits.map(({ recipe: { calories, label, image, url, ingredients, uri } }) => ({ recipe: { calories, label, image, url, ingredients, uri } }));
-     const newRecipes = data.hits.map(({ recipe}) => ({
+      if(data.data.hits.length>0){
+     const newRecipes = data.data.hits.map(({ recipe}) => ({
           recipe: {
             calories: recipe.calories,
             label: recipe.label,
@@ -64,7 +62,7 @@ const App = () => {
     catch(error){
       setHasError(true);
     }
-},[url,setRecipes]);
+},[query,setRecipes]);
   
   useEffect(() => {
     if (!(recipes.length>0)) setError("Still loading, please wait")

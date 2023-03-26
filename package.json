@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@netlify/functions": "^1.4.0",
     "@testing-library/dom": "^9.0.1",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.4.3",
@@ -13,6 +14,8 @@
     "@types/ws": "^8.5.4",
     "msw": "^1.1.0",
     "mutationobserver-shim": "^0.3.7",
+    "netlify-cli": "^13.2.1",
+    "node-fetch": "^3.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-lazy-load": "^3.1.13",

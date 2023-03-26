@@ -12,6 +12,8 @@
 .env
 #netlify
 /.netlify
+functions/
+netlify.toml
 # production
 /build
 
